@@ -1,0 +1,21 @@
+Algorithm for Caesar Cipher:
+
+Input:
+
+A String of either upper case or lower case letters, called rawString.
+An Integer 0 to n denoting the required shift.
+
+Procedure:
+
+Traverse the given text one character at a time.
+For each character, transform the given character as per the rule, depending on whether we’re encrypting or decrypting the text.
+Rule of the every charcter Trversal (En(x) = (x+n) mod 26 here x - single character and n - shifting value)
+Return the new string generated.
+Program that receives a Text (string) and Shift value( integer) and returns the encrypted text.
+
+Disadvantages of using ASCII values
+
+More bits are needed for non-ASCII characters, so some documents take a bit more space than with encodings that are specific to a particular language or writing system. However, standard text compression mitigates this in most cases.
+One cannot simply assume that every character is a fixed size, so text processing should be done using the ICU libraries rather than counting bytes.
+You might have to think about characters other than Latin.
+It supports emoji characters.
