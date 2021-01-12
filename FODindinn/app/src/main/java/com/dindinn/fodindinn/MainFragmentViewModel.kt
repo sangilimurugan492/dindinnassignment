@@ -22,7 +22,7 @@ class MainFragmentViewModel  (
         foRepository.getFoodItems()
     }
 
-    fun getFoodItems() : Observable<List<FoodItem>> {
+    fun getFoodItems() : Observable<MutableList<FoodItem>> {
         return foRepository.getFoodItems()
     }
 

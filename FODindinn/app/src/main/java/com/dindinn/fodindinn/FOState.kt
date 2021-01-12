@@ -7,10 +7,10 @@ import com.dindinn.fodindinn.data.FoodItem
 
 data class FOState(
     val foodItems: Async<List<FoodItem>> = Uninitialized,
-    val lovedDogId: Long? = null,
+    val foodItemId: Long? = null,
     val singleItem: Async<FoodItem> = Uninitialized
 ) : MavericksState {
-    val food: FoodItem? = foodItem(lovedDogId)
+    val food: FoodItem? = foodItem(foodItemId)
 
-    fun foodItem(id: Long?): FoodItem? = foodItems()?.firstOrNull { it.id == id }
+    private fun foodItem(id: Long?): FoodItem? = foodItems()?.firstOrNull { it.id == id }
 }

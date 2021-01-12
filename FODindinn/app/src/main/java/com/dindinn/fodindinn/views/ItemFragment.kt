@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.activityViewModel
 import com.airbnb.mvrx.withState
-import com.dindinn.fodindinn.Constants
 import com.dindinn.fodindinn.MainFragmentViewModel
 import com.dindinn.fodindinn.databinding.ViewPagerItemFragmentBinding
 import com.dindinn.fodindinn.views.adapters.ItemAdapter
@@ -45,7 +44,6 @@ class ItemFragment: Fragment(), MavericksView {
                     adapter.setMenu(it)
                 }
 
-        adapter.setMenu(Constants.getImageModel())
 //        adapter.addListener(this)
         bindings.rvItem.adapter = adapter
     }

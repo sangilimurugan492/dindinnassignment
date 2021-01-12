@@ -1,5 +1,6 @@
 package com.dindinn.fodindinn.views
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +11,9 @@ import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.activityViewModel
 import com.airbnb.mvrx.withState
 import com.dindinn.fodindinn.Constants
+import com.dindinn.fodindinn.ItemClickListener
 import com.dindinn.fodindinn.MainFragmentViewModel
+import com.dindinn.fodindinn.data.FoodItem
 import com.dindinn.fodindinn.data.network.APIClient
 import com.dindinn.fodindinn.data.network.APIInterface
 import com.dindinn.fodindinn.databinding.ViewPagerCartFragmentBinding
@@ -21,21 +24,15 @@ import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import retrofit2.Retrofit
 
-class CartFragment: Fragment(), MavericksView {
+@Suppress("UNCHECKED_CAST", "SetTextI18n")
+
+class CartFragment(var isFrom : String?): Fragment(), MavericksView, ItemClickListener {
 
     private val viewModel : MainFragmentViewModel by activityViewModel()
-    private val adapter = CartAdapter()
+    private val adapter = CartAdapter(isFrom!!)
     private lateinit var bindings: ViewPagerCartFragmentBinding
     private val compositeDisposable = CompositeDisposable()
     private var apiInterface : APIInterface? = null
-
-    companion object {
-        private var isFrom : String? = null
-        fun newInstance() = CartFragment()
-        fun setType(from : String) {
-            isFrom = from
-        }
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -46,16 +43,23 @@ class CartFragment: Fragment(), MavericksView {
         return bindings.root
     }
 
+    @SuppressLint("CheckResult", "SetTextI18n")
     private fun initComponents() {
         bindings.rvItem.layoutManager = LinearLayoutManager(requireActivity())
         bindings.rvItem.setHasFixedSize(true)
 
-//        adapter.addListener(this)
+
         bindings.rvItem.adapter = adapter
-        if (isFrom.equals("info")) {
+        if ("info" == isFrom) {
             getFetchData()
         } else {
-            adapter.setMenu(Constants.getImageModel())
+            adapter.addListener(this)
+            viewModel.getFoodItems().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    adapter.setMenu(it as MutableList<Any>)
+                    calculateTotal(it)
+                }
         }
 
     }
@@ -65,7 +69,7 @@ class CartFragment: Fragment(), MavericksView {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(Consumer {
-                    adapter.setMenu(it)
+                    adapter.setMenu(it as MutableList<Any>)
                 })
         )
     }
@@ -73,5 +77,19 @@ class CartFragment: Fragment(), MavericksView {
 
     override fun invalidate() = withState(viewModel) {state->
         bindings.state = state
+    }
+
+    override fun clicked(int: Int) {
+        adapter.removeItem(int)
+        calculateTotal(adapter.getItems() as MutableList<FoodItem>)
+
+    }
+
+    private fun calculateTotal(it : MutableList<FoodItem>) {
+        var total = 0
+        for(item in it) {
+            total += item.price
+        }
+        bindings.tvTotal.text = "Total $total"
     }
 }

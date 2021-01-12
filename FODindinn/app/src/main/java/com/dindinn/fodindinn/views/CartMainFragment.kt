@@ -5,12 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.activityViewModel
 import com.airbnb.mvrx.withState
 import com.dindinn.fodindinn.views.adapters.CartFragmentAdapter
 import com.dindinn.fodindinn.MainFragmentHandler
 import com.dindinn.fodindinn.MainFragmentViewModel
+import com.dindinn.fodindinn.R
 import com.dindinn.fodindinn.databinding.FragementCartLayoutBinding
 import com.google.android.material.tabs.TabLayout
 
@@ -63,6 +65,6 @@ class CartMainFragment : Fragment(), MavericksView, MainFragmentHandler {
     }
 
     override fun onCartClicked() {
-
+            findNavController().popBackStack()
     }
 }

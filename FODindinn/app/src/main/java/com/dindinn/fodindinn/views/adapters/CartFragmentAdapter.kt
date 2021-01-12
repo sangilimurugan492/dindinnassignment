@@ -10,10 +10,11 @@ class CartFragmentAdapter (private val myContext: Context, fm: FragmentManager, 
 
     // this is for fragment tabs
     override fun getItem(position: Int): Fragment {
-        if (position == 1) {
-            CartFragment.setType("info")
+        if (position == 0) {
+            return CartFragment("cart")
+        } else {
+            return CartFragment("info")
         }
-        return CartFragment.newInstance()
     }
 
     // this counts total number of tabs
